@@ -2,12 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-class testItem
-{
-    public static float recovery = 10.0f;
-    public static bool get = false;
 
-}
 
 public class TestScripts : MonoBehaviour
 {
@@ -16,7 +11,7 @@ public class TestScripts : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // testPaintLongth = 1000.0f;
+        testPaintLongth = 1000.0f;
     }
 
     // Update is called once per frame
@@ -27,18 +22,16 @@ public class TestScripts : MonoBehaviour
         {
             testPaintLongth--;
         }
-
-
-        if (Input.GetKey(KeyCode.A))
+        /*if (Input.GetKey(KeyCode.A))
         {
-            testItem.get = true;
+            Item.get = true;
         }
 
-        if (testItem.get == true)
+        if (Item.get == true)
         {
-            testPaintLongth += testItem.recovery;
-            testItem.get = false;
-        }
+            testPaintLongth += Item.recovery;
+            Item.get = false;
+        }*/
 
     }
 }
