@@ -5,6 +5,12 @@ using UnityEngine;
 public class Ball : MonoBehaviour
 {
     [SerializeField]
+    private float maxLife;
+
+    [System.NonSerialized]
+    public float currentLife;
+
+    [SerializeField]
     private float gravity;
 
     [SerializeField]
@@ -15,7 +21,7 @@ public class Ball : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        currentLife = maxLife * 0.5f;
     }
 
     // Update is called once per frame
@@ -32,5 +38,10 @@ public class Ball : MonoBehaviour
         Vector2 boundDirection = new Vector2(Mathf.Cos(lineAngle),Mathf.Sin(lineAngle));
 
         move = boundDirection * boundPower;
+    }
+
+    public float GetMaxLife()
+    {
+        return maxLife;
     }
 }
