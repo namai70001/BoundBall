@@ -15,6 +15,6 @@ public class Life : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        image.fillAmount = player.currentLife / player.GetMaxLife();
+        image.fillAmount = player.currentLife / player.MaxLife;
     }
 }
