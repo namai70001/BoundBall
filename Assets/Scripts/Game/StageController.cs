@@ -3,7 +3,6 @@ using Framework.Singleton;
 using Framework.Tiled;
 using System.Collections.Generic;
 using Framework.ObjectPool;
-using Framework.RectangularList;
 
 namespace Game.StageManager
 {
@@ -24,21 +23,26 @@ namespace Game.StageManager
         private string path = "Stage/001_Stage";
         private StageData stage;
 
-        [SerializeField]
-        private List<ValueList<string>> objectPathRectangularList;
+        private const float stageDataWidth = 0.5f;
+        private const float stageDataHeight = 0.5f;
 
         [SerializeField]
+        private List<string> objectPathList = new List<string>();
+        
         private Vector3 stageLeftUp;
 
-        private int layerCnt;
+        [SerializeField]
+        private GameObject currentStage;
+
+        [SerializeField]
+        private GameObject nextStage;
 
         private void Start()
         {
             TiledData tiledData = TiledManager.Instance.LoadTiledJsonData(path);
 
             TiledLayerData[] layerDataList = tiledData.Layers;
-
-            layerCnt = 0;
+            
             foreach (TiledLayerData layer in layerDataList)
             {
                 int Width = layer.Width;
@@ -49,22 +53,28 @@ namespace Game.StageManager
 
                 foreach (int data in layer.Data)
                 {
-                    if (objectPathRectangularList[layerCnt].List[data] != "")
+                    if (objectPathList[data] != "")
                     {
-                        GameObject obj = ObjectPoolManager.Instance.GetObject(objectPathRectangularList[layerCnt].List[data]);
-                        obj.transform.position = stageLeftUp + new Vector3(x, y, 0);
+                        GameObject obj = ObjectPoolManager.Instance.GetObject(objectPathList[data]);
+                        obj.transform.parent = currentStage.transform;
+                        obj.transform.localPosition = stageLeftUp + new Vector3(x * 0.5f, y * 0.5f, 0);
                     }
 
                     x += 1;
                     if (x == Width)
                     {
-                        y += 1;
+                        y -= 1;
                         x = 0;
                     }
                 }
-
-                layerCnt += 1;
             }
+        }
+
+        private void CreateStage()
+        {
+            nextStage = currentStage;
+
+
         }
     }
 }

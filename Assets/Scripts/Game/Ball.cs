@@ -2,15 +2,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Ball : MonoBehaviour
 {
+    private const string SCORE_KEY = "score";
+
     [SerializeField]
     private float maxLife;
     public float MaxLife { get { return maxLife; } }
 
     [System.NonSerialized]
     public float currentLife;
+
+    [SerializeField]
+    private float itemHealLife;
 
     [SerializeField]
     private float gravity;
@@ -38,5 +44,29 @@ public class Ball : MonoBehaviour
     {
         if (collision.gameObject.tag == "Line")
             ObjectPoolManager.Instance.DeleteObject(collision.gameObject);
+        else if (collision.gameObject.tag == "Over")
+            GameOver();
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {        
+        if (collision.gameObject.tag == "Item")
+        {
+            currentLife += itemHealLife;
+            ObjectPoolManager.Instance.DeleteObject(collision.gameObject);
+        }
+    }
+
+    private void Heal()
+    {
+        currentLife += itemHealLife;
+        if(currentLife > maxLife)
+        {
+            currentLife = maxLife;
+        }
+    }
+
+    private void GameOver()
+    {
     }
 }
