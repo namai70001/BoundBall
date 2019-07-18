@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Framework.Singleton
 {
@@ -9,12 +10,15 @@ namespace Framework.Singleton
         {
             get
             {
-                if (instance == null)
-                {
-                    GameObject obj = new GameObject(typeof(T).Name);
-                    instance = obj.AddComponent<T>();
-                }                    
+                if (instance != null) return instance;
 
+                Type type = typeof(T);
+                instance = (T)FindObjectOfType(type);
+
+                if (instance != null) return instance;
+
+                GameObject obj = new GameObject(type.Name);
+                instance = obj.AddComponent<T>();
                 return instance;
             }
         }

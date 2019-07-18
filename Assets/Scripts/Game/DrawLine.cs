@@ -5,10 +5,13 @@ using Framework.ObjectPool;
 
 public class DrawLine : MonoBehaviour
 {
-    public GameObject linePrefab;
-    public GameObject hasuPrefab;
+    private const string cubePath = "Prefab/cube";
+    private const string linePath = "Prefab/Line";
+
     public float lineLength = 0.2f; //線の長さ
     public float lineWidth = 0.1f;  //線の幅
+
+    private Vector3 lineBaseScale = new Vector3(0.03f,0.03f,0);
     Vector3 startPos;
     Vector3 LineStartPos;
     Vector3 endPos;
@@ -16,10 +19,10 @@ public class DrawLine : MonoBehaviour
 
     private Vector3 touchPos;
 
+    public  Ball player;
+
     void Start()
     {
-        //ObjectPoolManager.Instance.CreatePool("cube",1);
-
     }
 
     void Update()
@@ -44,20 +47,13 @@ public class DrawLine : MonoBehaviour
             startPos = touchPos;
             endPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             endPos.z = 0;
-            //ObjectPoolManager.Instance.GetObject("cube");
 
             if ((endPos - startPos).magnitude > lineLength)
             {
-                //ObjectPoolManager.Instance.GetObject("cube");
-                //GameObject obj = Instantiate(linePrefab, transform.position, transform.rotation) as GameObject;
-                GameObject obj = ObjectPoolManager.Instance.GetObject("cube");
-                /*linePrefab.transform.position = (startPos + endPos) / 2;
-                linePrefab.transform.right = (endPos - startPos).normalized;
+                GameObject obj = ObjectPoolManager.Instance.GetObject(cubePath);
 
-                linePrefab.transform.localScale = new Vector3((endPos - startPos).magnitude, lineWidth, lineWidth);
+                obj.transform.parent = transform;
 
-                linePrefab.transform.parent = this.transform;
-                */
                 obj.transform.position = (startPos + endPos) / 2;
                 obj.transform.right = (endPos - startPos).normalized;
 
@@ -65,27 +61,39 @@ public class DrawLine : MonoBehaviour
 
                 obj.transform.parent = this.transform;
 
+                player.currentLife -= 1;
+
                 touchPos = endPos;
-                cubecnt++;
             }
         }
 
         if (Input.GetMouseButtonUp(0))
         {
-            GameObject hasu = ObjectPoolManager.Instance.GetObject("kari_hasu");
-            //GameObject hasu = Instantiate(hasuPrefab, transform.position, transform.rotation) as GameObject;
+            foreach(Transform trans in transform)
+            {
+                ObjectPoolManager.Instance.DeleteObject(trans.gameObject);
+            }
 
-            Vector2 Line = new Vector2((endPos.x - LineStartPos.x),(endPos.y - LineStartPos.y));
+            GameObject line = ObjectPoolManager.Instance.GetObject(linePath);
 
-            hasu.transform.position = new Vector3(LineStartPos.x + 1, LineStartPos.y, 0);
-            hasu.transform.localScale = new Vector3(cubecnt, 1, 10);
+            Vector2 linePosition = (LineStartPos + endPos) * 0.5f;
+            float lineScale = (LineStartPos - endPos).magnitude;
+            float lineAngle = GetAim(LineStartPos , endPos);
 
-            float angle = Mathf.Atan2(Line.y, Line.x);
+            line.transform.position = new Vector3(linePosition.x, linePosition.y, 1);
+            line.transform.localScale = new Vector3(lineScale * lineBaseScale.x, lineScale * lineBaseScale.y, 1);
+            line.transform.Rotate(new Vector3(0, 0, lineAngle - line.transform.rotation.z));
 
-            angle *= 180;
-            angle /= Mathf.PI;
-            hasu.transform.Rotate(new Vector3(0, 0, angle));
+            line.transform.parent = transform;
         }
+    }
+
+    private float GetAim(Vector2 p1, Vector2 p2)
+    {
+        float dx = p2.x - p1.x;
+        float dy = p2.y - p1.y;
+        float rad = Mathf.Atan2(dy, dx);
+        return rad * Mathf.Rad2Deg;
     }
 }
 

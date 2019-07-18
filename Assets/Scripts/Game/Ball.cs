@@ -1,4 +1,5 @@
 ﻿using Framework.ObjectPool;
+using Game.StageManager;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -54,6 +55,11 @@ public class Ball : MonoBehaviour
         {
             currentLife += itemHealLife;
             ObjectPoolManager.Instance.DeleteObject(collision.gameObject);
+        }
+
+        if(collision.gameObject.tag == "Stage")
+        {
+            StageController.Instance.NextStage();
         }
     }
 
