@@ -70,7 +70,7 @@ namespace Framework.Tiled
         public int Width { get { return width; } }
     }
 
-    public class TiledManager : Singleton<TiledManager>
+    public class TiledController : Singleton<TiledController>
     {
         public TiledData LoadTiledJsonData(string path)
         {

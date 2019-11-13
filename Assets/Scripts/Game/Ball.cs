@@ -1,4 +1,6 @@
-﻿using Framework.ObjectPool;
+﻿using Framework.Fade;
+using Framework.ObjectPool;
+using Framework.Sound;
 using Game.StageManager;
 using System.Collections;
 using System.Collections.Generic;
@@ -44,9 +46,10 @@ public class Ball : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Line")
+        {
             ObjectPoolManager.Instance.DeleteObject(collision.gameObject);
-        else if (collision.gameObject.tag == "Over")
-            GameOver();
+            SoundManager.Instance.PlaySE("Sound/SE/S_LineHit");
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -55,11 +58,17 @@ public class Ball : MonoBehaviour
         {
             currentLife += itemHealLife;
             ObjectPoolManager.Instance.DeleteObject(collision.gameObject);
+            SoundManager.Instance.PlaySE("Sound/SE/S_Item");
         }
 
         if(collision.gameObject.tag == "Stage")
         {
             StageController.Instance.NextStage();
+        }
+
+        if (collision.gameObject.tag == "Over")
+        {
+            GameOver();
         }
     }
 
@@ -74,5 +83,6 @@ public class Ball : MonoBehaviour
 
     private void GameOver()
     {
+        FadeManager.Instance.FadeIn("SampleScene");
     }
 }

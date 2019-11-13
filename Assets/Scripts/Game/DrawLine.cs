@@ -17,12 +17,15 @@ public class DrawLine : MonoBehaviour
     Vector3 endPos;
     int cubecnt;
 
+    private List<GameObject> cubes;
+
     private Vector3 touchPos;
 
     public  Ball player;
 
     void Start()
     {
+        cubes = new List<GameObject>();
     }
 
     void Update()
@@ -52,6 +55,7 @@ public class DrawLine : MonoBehaviour
             {
                 GameObject obj = ObjectPoolManager.Instance.GetObject(cubePath);
 
+                cubes.Add(obj);
                 obj.transform.parent = transform;
 
                 obj.transform.position = (startPos + endPos) / 2;
@@ -69,10 +73,11 @@ public class DrawLine : MonoBehaviour
 
         if (Input.GetMouseButtonUp(0))
         {
-            foreach(Transform trans in transform)
+            foreach(GameObject obj in cubes)
             {
-                ObjectPoolManager.Instance.DeleteObject(trans.gameObject);
+                ObjectPoolManager.Instance.DeleteObject(obj);
             }
+            cubes.Clear();
 
             GameObject line = ObjectPoolManager.Instance.GetObject(linePath);
 

@@ -13,7 +13,7 @@ namespace Game.StageManager
         
         public void CreateStage(string path)
         {
-            TiledData tiledData = TiledManager.Instance.LoadTiledJsonData(path);
+            TiledData tiledData = TiledController.Instance.LoadTiledJsonData(path);
 
             TiledLayerData[] layerDataList = tiledData.Layers;
 
